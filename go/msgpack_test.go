@@ -18,41 +18,14 @@ func equal(lhs reflect.Value, rhs reflect.Value) bool {
     case *reflect.BoolValue:
         _rhs, ok := rhs.(*reflect.BoolValue)
         return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Uint8Value:
-        _rhs, ok := rhs.(*reflect.Uint8Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Uint16Value:
-        _rhs, ok := rhs.(*reflect.Uint16Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Uint32Value:
-        _rhs, ok := rhs.(*reflect.Uint32Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Uint64Value:
-        _rhs, ok := rhs.(*reflect.Uint64Value)
-        return ok && _lhs.Get() == _rhs.Get()
     case *reflect.UintValue:
         _rhs, ok := rhs.(*reflect.UintValue)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Int8Value:
-        _rhs, ok := rhs.(*reflect.Int8Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Int16Value:
-        _rhs, ok := rhs.(*reflect.Int16Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Int32Value:
-        _rhs, ok := rhs.(*reflect.Int32Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Int64Value:
-        _rhs, ok := rhs.(*reflect.Int64Value)
         return ok && _lhs.Get() == _rhs.Get()
     case *reflect.IntValue:
         _rhs, ok := rhs.(*reflect.IntValue)
         return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Float32Value:
-        _rhs, ok := rhs.(*reflect.Float32Value)
-        return ok && _lhs.Get() == _rhs.Get()
-    case *reflect.Float64Value:
-        _rhs, ok := rhs.(*reflect.Float64Value)
+    case *reflect.FloatValue:
+        _rhs, ok := rhs.(*reflect.FloatValue)
         return ok && _lhs.Get() == _rhs.Get()
     case reflect.ArrayOrSliceValue:
         _rhs := rhs.(reflect.ArrayOrSliceValue)
@@ -76,7 +49,7 @@ func equal(lhs reflect.Value, rhs reflect.Value) bool {
 func TestPackUint8(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []uint8 { 0, 1, 2, 125, 126, 127, 128, 253, 254, 255 } {
-        _, err := PackUint8(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0x00, 0x01, 0x02, 0x7d, 0x7e, 0x7f, 0xcc, 0x80, 0xcc, 0xfd, 0xcc, 0xfe, 0xcc, 0xff }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -85,7 +58,7 @@ func TestPackUint8(t *testing.T) {
 func TestPackUint16(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []uint16 { 0, 1, 2, 125, 126, 127, 128, 253, 254, 255, 256, 65533, 65534, 65535 } {
-        _, err := PackUint16(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0x00, 0x01, 0x02, 0x7d, 0x7e, 0x7f, 0xcc, 0x80, 0xcc, 0xfd, 0xcc, 0xfe, 0xcc, 0xff, 0xcd, 0x01, 0x00, 0xcd, 0xff, 0xfd, 0xcd, 0xff, 0xfe, 0xcd, 0xff, 0xff }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -94,7 +67,7 @@ func TestPackUint16(t *testing.T) {
 func TestPackUint32(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []uint32 { 0, 1, 2, 125, 126, 127, 128, 253, 254, 255, 256, 65533, 65534, 65535, 65536, 4294967293, 4294967294, 4294967295 } {
-        _, err := PackUint32(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0x00, 0x01, 0x02, 0x7d, 0x7e, 0x7f, 0xcc, 0x80, 0xcc, 0xfd, 0xcc, 0xfe, 0xcc, 0xff, 0xcd, 0x01, 0x00, 0xcd, 0xff, 0xfd, 0xcd, 0xff, 0xfe, 0xcd, 0xff, 0xff, 0xce, 0x00, 0x01, 0x00, 0x00, 0xce, 0xff, 0xff, 0xff, 0xfd, 0xce, 0xff, 0xff, 0xff, 0xfe, 0xce, 0xff, 0xff, 0xff, 0xff }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -103,7 +76,7 @@ func TestPackUint32(t *testing.T) {
 func TestPackUint64(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []uint64 { 0, 1, 2, 125, 126, 127, 128, 253, 254, 255, 256, 65533, 65534, 65535, 65536, 4294967293, 4294967294, 4294967295, 4294967296, 18446744073709551613, 18446744073709551614, 18446744073709551615 } {
-        _, err := PackUint64(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0x00, 0x01, 0x02, 0x7d, 0x7e, 0x7f, 0xcc, 0x80, 0xcc, 0xfd, 0xcc, 0xfe, 0xcc, 0xff, 0xcd, 0x01, 0x00, 0xcd, 0xff, 0xfd, 0xcd, 0xff, 0xfe, 0xcd, 0xff, 0xff, 0xce, 0x00, 0x01, 0x00, 0x00, 0xce, 0xff, 0xff, 0xff, 0xfd, 0xce, 0xff, 0xff, 0xff, 0xfe, 0xce, 0xff, 0xff, 0xff, 0xff, 0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfd, 0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -112,7 +85,7 @@ func TestPackUint64(t *testing.T) {
 func TestPackInt8(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []int8 { -128, -127, -34, -33, -32, -31, 0, 1, 126, 127 } {
-        _, err := PackInt8(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0xd0, 0x80, 0xd0, 0x81, 0xd0, 0xde, 0xd0, 0xdf, 0xe0, 0xe1, 0x00, 0x01, 0x7e, 0x7f }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -121,7 +94,7 @@ func TestPackInt8(t *testing.T) {
 func TestPackInt16(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []int16 { -32768, -32767, -131, -130, -129, -128, -127, -34, -33, -32, -31, 0, 1, 126, 127, 128, 129, 130, 32765, 32766, 32767 } {
-        _, err := PackInt16(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0xd1, 0x80, 0x00, 0xd1, 0x80, 0x01, 0xd1, 0xff, 0x7d, 0xd1, 0xff, 0x7e, 0xd1, 0xff, 0x7f, 0xd0, 0x80, 0xd0, 0x81, 0xd0, 0xde, 0xd0, 0xdf, 0xe0, 0xe1, 0x00, 0x01, 0x7e, 0x7f, 0xd1, 0x00, 0x80, 0xd1, 0x00, 0x81, 0xd1, 0x00, 0x82, 0xd1, 0x7f, 0xfd, 0xd1, 0x7f, 0xfe, 0xd1, 0x7f, 0xff }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -130,7 +103,7 @@ func TestPackInt16(t *testing.T) {
 func TestPackInt32(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []int32 { -2147483648, -2147483647, -2147483646, -32771, -32770, -32769, -32768, -32767, -131, -130, -129, -128, -127, -34, -33, -32, -31, 0, 1, 126, 127, 128, 129, 130, 32765, 32766, 32767, 32768, 32769, 32770, 2147483645, 2147483646, 2147483647 } {
-        _, err := PackInt32(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0xd2, 0x80, 0x00, 0x00, 0x00, 0xd2, 0x80, 0x00, 0x00, 0x01, 0xd2, 0x80, 0x00, 0x00, 0x02, 0xd2, 0xff, 0xff, 0x7f, 0xfd, 0xd2, 0xff, 0xff, 0x7f, 0xfe, 0xd2, 0xff, 0xff, 0x7f, 0xff, 0xd1, 0x80, 0x00, 0xd1, 0x80, 0x01, 0xd1, 0xff, 0x7d, 0xd1, 0xff, 0x7e, 0xd1, 0xff, 0x7f, 0xd0, 0x80, 0xd0, 0x81, 0xd0, 0xde, 0xd0, 0xdf, 0xe0, 0xe1, 0x00, 0x01, 0x7e, 0x7f, 0xd1, 0x00, 0x80, 0xd1, 0x00, 0x81, 0xd1, 0x00, 0x82, 0xd1, 0x7f, 0xfd, 0xd1, 0x7f, 0xfe, 0xd1, 0x7f, 0xff, 0xd2, 0x00, 0x00, 0x80, 0x00, 0xd2, 0x00, 0x00, 0x80, 0x01, 0xd2, 0x00, 0x00, 0x80, 0x02, 0xd2, 0x7f, 0xff, 0xff, 0xfd, 0xd2, 0x7f, 0xff, 0xff, 0xfe, 0xd2, 0x7f, 0xff, 0xff, 0xff }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -139,15 +112,25 @@ func TestPackInt32(t *testing.T) {
 func TestPackInt64(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []int64 { -9223372036854775808, -9223372036854775807, -9223372036854775806, -2147483651, -2147483650, -2147483649, -2147483648, -2147483647, -2147483646, -32771, -32770, -32769, -32768, -32767, -131, -130, -129, -128, -127, -34, -33, -32, -31, 0, 1, 126, 127, 128, 129, 130, 32765, 32766, 32767, 32768, 32769, 32770, 2147483645, 2147483646, 2147483647, 2147483648, 2147483649, 2147483650, 4294967296, 4294967297, 4294967298 } {
-        _, err := PackInt64(b, i)
+        _, err := Pack(b, i)
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xfd, 0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xfe, 0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff, 0xd2, 0x80, 0x00, 0x00, 0x00, 0xd2, 0x80, 0x00, 0x00, 0x01, 0xd2, 0x80, 0x00, 0x00, 0x02, 0xd2, 0xff, 0xff, 0x7f, 0xfd, 0xd2, 0xff, 0xff, 0x7f, 0xfe, 0xd2, 0xff, 0xff, 0x7f, 0xff, 0xd1, 0x80, 0x00, 0xd1, 0x80, 0x01, 0xd1, 0xff, 0x7d, 0xd1, 0xff, 0x7e, 0xd1, 0xff, 0x7f, 0xd0, 0x80, 0xd0, 0x81, 0xd0, 0xde, 0xd0, 0xdf, 0xe0, 0xe1, 0x00, 0x01, 0x7e, 0x7f, 0xd1, 0x00, 0x80, 0xd1, 0x00, 0x81, 0xd1, 0x00, 0x82, 0xd1, 0x7f, 0xfd, 0xd1, 0x7f, 0xfe, 0xd1, 0x7f, 0xff, 0xd2, 0x00, 0x00, 0x80, 0x00, 0xd2, 0x00, 0x00, 0x80, 0x01, 0xd2, 0x00, 0x00, 0x80, 0x02, 0xd2, 0x7f, 0xff, 0xff, 0xfd, 0xd2, 0x7f, 0xff, 0xff, 0xfe, 0xd2, 0x7f, 0xff, 0xff, 0xff, 0xd3, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0xd3, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x01, 0xd3, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x02, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0xd3, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02 }) != 0 { t.Error("wrong output", b.Bytes()) }
 }
 
+func TestPackString(t *testing.T) {
+    b := &bytes.Buffer{}
+    for _, i := range []string { "", "hello\tworld\n" } {
+        _, err := Pack(b, i)
+        if err != nil { t.Error("err != nil") }
+    }
+    if bytes.Compare(b.Bytes(), []byte { 0xa0, 0xac, 0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x09, 0x77, 0x6f, 0x72, 0x6c, 0x64, 0x0a }) != 0 { t.Error("wrong output", b.Bytes()) }
+	//160 172 104 101 108 108 111 9 119 111 114 108 100 10
+}
+
 func TestPackNil(t *testing.T) {
     b := &bytes.Buffer{}
-    nbyteswrite, err := PackNil(b)
+    nbyteswrite, err := Pack(b, nil)
     if nbyteswrite != 1 { t.Error("nbyteswrite != 1") }
     if err != nil { t.Error("err != nil") }
     if bytes.Compare(b.Bytes(), []byte { 0xc0 }) != 0 { t.Error("wrong output", b.Bytes()) }
@@ -156,35 +139,22 @@ func TestPackNil(t *testing.T) {
 func TestPackBool(t *testing.T) {
     b := &bytes.Buffer{}
     for _, i := range []bool { false, true } {
-        nbyteswrite, err := PackBool(b, i)
+        nbyteswrite, err := Pack(b, i)
         if nbyteswrite != 1 { t.Error("nbyteswrite != 1") }
         if err != nil { t.Error("err != nil") }
     }
     if bytes.Compare(b.Bytes(), []byte { 0xc2, 0xc3 }) != 0 { t.Error("wrong output", b.Bytes()) }
 }
 
-func TestPackInt32Array(t *testing.T) {
-    b := &bytes.Buffer{}
-    _, err := PackInt32Array(b, []int32 {})
-    if err != nil { t.Error("err != nil") }
-    _, err = PackInt32Array(b, []int32 { 0 })
-    if err != nil { t.Error("err != nil") }
-    _, err = PackInt32Array(b, []int32 { 0, 1 })
-    if err != nil { t.Error("err != nil") }
-    _, err = PackInt32Array(b, []int32 { 0, 1, 2 })
-    if err != nil { t.Error("err != nil") }
-    if bytes.Compare(b.Bytes(), []byte { 0x90, 0x91, 0x00, 0x92, 0x00, 0x01, 0x93, 0x00, 0x01, 0x02 }) != 0 { t.Error("wrong output", b.Bytes()) }
-}
-
 func TestPackArray(t *testing.T) {
     b := &bytes.Buffer{}
-    _, err := PackArray(b, reflect.NewValue([]int32 {}).(reflect.ArrayOrSliceValue))
+    _, err := Pack(b, []int32 {})
     if err != nil { t.Error("err != nil") }
-    _, err = PackArray(b, reflect.NewValue([]int32 { 0 }).(reflect.ArrayOrSliceValue))
+    _, err = Pack(b, []int32 { 0 })
     if err != nil { t.Error("err != nil") }
-    _, err = PackArray(b, reflect.NewValue([]int32 { 0, 1 }).(reflect.ArrayOrSliceValue))
+    _, err = Pack(b, []int32 { 0, 1 })
     if err != nil { t.Error("err != nil") }
-    _, err = PackArray(b, reflect.NewValue([]int32 { 0, 1, 2 }).(reflect.ArrayOrSliceValue))
+    _, err = Pack(b, []int32 { 0, 1, 2 })
     if err != nil { t.Error("err != nil") }
     if bytes.Compare(b.Bytes(), []byte { 0x90, 0x91, 0x00, 0x92, 0x00, 0x01, 0x93, 0x00, 0x01, 0x02 }) != 0 { t.Error("wrong output", b.Bytes()) }
 }

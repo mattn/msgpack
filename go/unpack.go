@@ -109,7 +109,7 @@ func Unpack(reader io.Reader) (v reflect.Value, n int, err os.Error) {
         n, e := reader.Read(data)
         nbytesread += n
         if e != nil { return nil, nbytesread, e }
-        retval = reflect.NewValue(data)
+        retval = reflect.NewValue(string(data))
     } else {
         switch c {
         case 0xc0: retval = reflect.NewValue(nil)
